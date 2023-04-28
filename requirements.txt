@@ -1,0 +1,8 @@
+asgiref @ file:///home/conda/feedstock_root/build_artifacts/asgiref_1671589829431/work
+backports.zoneinfo @ file:///D:/bld/backports.zoneinfo_1667158957025/work
+Django @ file:///home/conda/feedstock_root/build_artifacts/django_1680693679482/work
+djangorestframework @ file:///home/conda/feedstock_root/build_artifacts/djangorestframework_1663854154474/work
+pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1680088766131/work
+sqlparse==0.4.3
+typing_extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1678559861143/work
+tzdata==2023.3
