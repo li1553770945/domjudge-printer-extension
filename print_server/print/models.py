@@ -10,16 +10,18 @@ def rename_file(instance, filename):
 
 # Create your models here.
 class PrintModel(models.Model):
-    team_id = models.CharField(max_length=30)
-    team_name = models.CharField(max_length=100)
+    team_id = models.CharField(max_length=30,default="")
+    team_name = models.CharField(max_length=100,default="")
     language = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     status = models.CharField(choices=(
         ("pending","pending"),
         ("processing","processing"),
         ("done","done")),
-        max_length=10
+        max_length=10,
+        default = "pending"
     )
+    original_name = models.CharField(max_length=100)
     submit_time = models.DateTimeField(auto_now_add=True,null=True)
     process_start_time = models.DateTimeField(null=True)
     done_time = models.DateTimeField(null=True)

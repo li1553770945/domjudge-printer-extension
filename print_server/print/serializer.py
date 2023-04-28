@@ -6,5 +6,4 @@ class PrintSerializer(serializers.ModelSerializer):
     class Meta:
         model = PrintModel
         fields = '__all__'
-    status = serializers.ChoiceField(choices=("pending", "processing", "done"), default="pending")
 

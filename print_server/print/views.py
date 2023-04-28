@@ -24,15 +24,15 @@ class PrintView(APIView):
         context = dict()
         context['code'] = 0
         print_obj = PrintSerializer(data=request.data)
-        print(request.data)
         if print_obj.is_valid():
             print_obj.save()
+            context['id'] = print_obj.data['id']
+            context['msg'] = "您的打印已发送至打印队列"
         else:
             context['code'] = 400
-            context['msg'] = print_obj.errors
+            context['msg'] = "添加到打印队列失败，原因：" + str(print_obj.errors)
             print(context['msg'])
             return Response(context, status=http.HTTPStatus.BAD_REQUEST)
-        print(print_obj.data)
         return Response(context)
 
     def put(self, request):

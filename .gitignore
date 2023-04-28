@@ -4,3 +4,5 @@ print_server/files
 print_server/db.sqlite3
 __pycache__/
 migrations/
+print_client/files
+print_client/log.txt

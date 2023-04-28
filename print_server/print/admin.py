@@ -6,7 +6,7 @@ from print.models import PrintModel
 class PrintAdmin(admin.ModelAdmin):
     list_display_links = ['id', 'team_name', 'team_id']
     list_display = ['id', 'team_name', 'team_id', 'submit_time', 'status']
-    list_filter = ['status']
+    list_filter = ['status',"team_name"]
 
 
 admin.site.register(PrintModel, PrintAdmin)
