@@ -6,9 +6,13 @@
 ## 使用方法
 
 1. `pip install -r requirements.txt`安装依赖。
-2. 在domjudge的管理页面设置命令，注意把地址替换掉。
+2. 修改`settings.py`。设置`Debug=False`。
+3. 使用`python manage.py creatersuperuser`新建一个管理员用户，进入admin后新建普通用户，注意创建后需要编辑用户把可登录勾选。
+4. 使用`uwsgi -i uwsgi.ini`启动服务端。
+5. 在domjudge的管理页面设置命令，注意把命令中的地址替换成本服务器的地址，-u后面的替换成普通用户的`用户名:密码`。
 ```shell
-curl -X POST -H Content-Type:multipart/form-data
+curl -fsS -X POST -H Content-Type:multipart/form-data
+-u printuser:print123456 
 -F team_name=[teamname]
 -F team_id=[teamid]
 -F language=[language]
@@ -23,4 +27,3 @@ USE domjudge;
 ALTER TABLE auditlog MODIFY extra_info VARCHAR(511);
 ```
 
-3. 使用`uwsgi -i uwsgi.ini`启动服务端。
