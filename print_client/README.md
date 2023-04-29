@@ -1,5 +1,10 @@
 # 打印客户端
 
+## 需求
+
+1. python3
+2. linux安装enscript
+
 ## 使用方法
 
 **需配合print_server使用**

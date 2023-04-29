@@ -6,3 +6,5 @@ __pycache__/
 migrations/
 print_client/files
 print_client/log.txt
+balloon_client/balloons
+balloon_client/log.txt

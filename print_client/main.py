@@ -1,9 +1,10 @@
 import datetime
+import subprocess
 import time
 import os
 import requests
 from log import get_logger
-
+import shlex
 SERVER_ADDR = "http://localhost:8000/"
 FILE_PATH = "files"
 ROOMS = ["501"]
@@ -31,7 +32,7 @@ def set_done(print_id):
     url = f'{SERVER_ADDR}print/'
     response = requests.put(url, data={"id": print_id, "status": "done"})
     if response.status_code != 200:
-        logger.error(f"设置processing出错，print_id:{print_id},http状态码:{response.status_code},信息：{response.text}")
+        logger.error(f"设置done出错，print_id:{print_id},http状态码:{response.status_code},信息：{response.text}")
 
 
 def get_room_from_location(location: str):
@@ -44,19 +45,23 @@ def need_print(location):
     return room in ROOMS
 
 
-def send_to_printer(print_obj):
+def send_to_printer(print_id,team_name,file_name,location):
     time_now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"{time_now}:正在打印来自:{print_obj['team_name']}的内容，打印id:{print_obj['id']}")
-    logger.info(f"正在打印来自:{print_obj['team_id']}的内容，打印id:{print_obj['id']}")
-    pass
+    print(f"{time_now}:正在打印来自:{team_name}的内容，打印id:{team_name}")
+    logger.info(f"正在打印来自:{team_name}的内容，打印id:{print_id}")
+    header = shlex.quote(f"id:{print_id}:{team_name}:{location}")
+    cmd = f"enscript -b  {header} -f Courier9 {file_name} 2>&1"
+    result = subprocess.run(cmd,cwd=os.getcwd())
+    logger.info("打印执行结果：", result.stdout)
 
 
 def process(print_obj):
     url = f"{SERVER_ADDR}{print_obj['file']}"
     response = requests.get(url)
-    with open(os.path.join(FILE_PATH, print_obj['original_name']), 'wb') as f:
+    file_path = os.path.join(FILE_PATH, print_obj['original_name'])
+    with open(file_path, 'wb') as f:
         f.write(response.content)
-    send_to_printer(print_obj)
+    send_to_printer(print_obj['print_id'],print_obj['team_name'],file_path,print_obj['location'])
     return
 
 
