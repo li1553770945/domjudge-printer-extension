@@ -7,6 +7,7 @@
 
 1. `pip install -r requirements.txt`安装依赖。
 2. 修改`settings.py`。设置`Debug=False`。
+3. 运行`python manage.py makemigrations`和`python manage.py migrate`。 
 3. 使用`python manage.py creatersuperuser`新建一个管理员用户，进入admin后新建普通用户，注意创建后需要编辑用户把可登录勾选。
 4. 使用`uwsgi -i uwsgi.ini`启动服务端。
 5. 在domjudge的管理页面设置命令，注意把命令中的地址替换成本服务器的地址，-u后面的替换成普通用户的`用户名:密码`。

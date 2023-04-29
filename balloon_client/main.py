@@ -47,15 +47,18 @@ def send_to_printer(balloon_id, problem, team_name, location, total_list):
     file_name = os.path.join("balloons", str(balloon_id) + ".txt")
     with open(file_name, "+w") as f:
         f.write(content)
-    cmd = f"enscript -f Courier9 {file_name} 2>&1"
+    cmd = ["enscript" ,"-f" ,"Courier9" ,file_name]
     try:
-        result = subprocess.run(cmd, cwd=os.getcwd())
-        if result.returncode == 0:
-            logger.info("打印成功，执行结果：" + str(result.stdout))
+        result = subprocess.run(cmd, cwd=os.getcwd(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout = result.stdout.decode()
+        stderr = result.stderr.decode()
+        if result.returncode == 0 and stderr == "":
+            logger.info(f"id:{balloon_id}打印成功，执行结果：{result.stdout}")
             return True
         else:
-            logger.error(f"打印失败，返回值{result.returncode},返回信息:{result.stdout}")
-            print(f"打印失败，返回值{result.returncode},返回信息:{result.stdout}")
+            msg = f"id:{balloon_id}打印失败，执行结果：stdout{result.stdout},stderr:{result.stderr}"
+            logger.error(msg)
+            print(msg)
             return False
     except Exception as e:
         logger.error("打印失败:" + str(e))
@@ -72,7 +75,7 @@ def process(print_obj):
     total_list = list()
     for balloon in total:
         total_list.append(balloon)
-    send_to_printer(balloon_id, problem, team_name, location, total_list)
+    return send_to_printer(balloon_id, problem, team_name, location, total_list)
 
 
 def main():
