@@ -4,6 +4,7 @@ import uuid
 def rename_file(instance, filename):
     if not os.path.exists("files"):
         os.mkdir("files")
+    print(os.path.splitext(instance.original_name))
     ext = os.path.splitext(instance.original_name)[1]
     new_filename = f"{uuid.uuid1().hex}{ext}"
     return f"files/{new_filename}"
@@ -12,7 +13,7 @@ def rename_file(instance, filename):
 class PrintModel(models.Model):
     team_id = models.CharField(max_length=30,default="")
     team_name = models.CharField(max_length=100,default="")
-    language = models.CharField(max_length=100)
+    language = models.CharField(max_length=100,default="")
     location = models.CharField(max_length=100)
     status = models.CharField(choices=(
         ("pending","pending"),
