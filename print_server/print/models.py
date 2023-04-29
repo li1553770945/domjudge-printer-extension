@@ -4,7 +4,7 @@ import uuid
 def rename_file(instance, filename):
     if not os.path.exists("files"):
         os.mkdir("files")
-    ext = os.path.splitext(filename)[1]
+    ext = os.path.splitext(instance.original_name)[1]
     new_filename = f"{uuid.uuid1().hex}{ext}"
     return f"files/{new_filename}"
 

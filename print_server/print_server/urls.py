@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from print.views import PrintView,PrintListView,file_download
+from print.views import PrintView,PrintListView,FileView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("print/", PrintView.as_view()),
     path("print-list/", PrintListView.as_view()),
-    path('files/<str:filename>/', file_download),
+    path('files/<str:filename>/', FileView.as_view()),
 ]

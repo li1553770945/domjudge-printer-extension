@@ -41,7 +41,7 @@ class PrintView(APIView):
         print_id = request.data.get('id')
         status = request.data.get('status')
 
-        if print_id is None or status is None or status not in ("processing","done"):
+        if print_id is None or status is None or status not in ("processing", "done"):
             return HttpResponse(status=http.HTTPStatus.BAD_REQUEST)
 
         print_obj = PrintModel.objects.filter(id=print_id)
@@ -58,7 +58,7 @@ class PrintView(APIView):
 
         return Response(context)
 
-    def get(self,request):
+    def get(self, request):
         context = dict()
         context['code'] = 0
         return Response(context)
@@ -79,13 +79,14 @@ class PrintListView(APIView):
         return Response(context)
 
 
-def file_download(request, filename):
-    file_path = os.path.join('files', filename)
-    if os.path.exists(file_path):
-        # 使用FileResponse来提供文件下载
-        response = FileResponse(open(file_path, 'rb'))
-        response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
-        return response
-    else:
-        # 如果文件不存在，返回404
-        return HttpResponse(status=404)
+class FileView(APIView):
+    def get(self, request, filename):
+        file_path = os.path.join('files', filename)
+        if os.path.exists(file_path):
+            # 使用FileResponse来提供文件下载
+            response = FileResponse(open(file_path, 'rb'))
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
+            return response
+        else:
+            # 如果文件不存在，返回404
+            return HttpResponse(status=404)
