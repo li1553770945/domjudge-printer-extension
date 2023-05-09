@@ -80,6 +80,9 @@ class PrintListView(APIView):
 
 
 class FileView(APIView):
+
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+	
     def get(self, request, filename):
         file_path = os.path.join('files', filename)
         if os.path.exists(file_path):

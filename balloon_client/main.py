@@ -6,15 +6,15 @@ from requests.auth import HTTPBasicAuth
 from log import get_logger
 import subprocess
 
-DOMJUDGE_ADDR = "http://192.168.1.197/domjudge/"
+DOMJUDGE_ADDR = "http://192.168.11.160/domjudge/"
 BALLOON_USERNAME = "admin"
-BALLOON_PASSWORD = "admin123456"
+BALLOON_PASSWORD = "jscpc123456"
 CONTEST_ID = 2
 ROOMS = [""]
 
 
 def get_balloons():
-    url = f'{DOMJUDGE_ADDR}api/v4/contests/{CONTEST_ID}/balloons/'
+    url = f'{DOMJUDGE_ADDR}api/v4/contests/{CONTEST_ID}/balloons?todo=true'
     response = requests.get(url, auth=HTTPBasicAuth(BALLOON_USERNAME, BALLOON_PASSWORD))
     return response.json()
 
@@ -52,7 +52,7 @@ def send_to_printer(balloon_id, problem, team_name, location, total_list):
         result = subprocess.run(cmd, cwd=os.getcwd(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout = result.stdout.decode()
         stderr = result.stderr.decode()
-        if result.returncode == 0 and stderr == "":
+        if result.returncode == 0:
             logger.info(f"id:{balloon_id}打印成功，执行结果：{result.stdout}")
             return True
         else:
@@ -91,7 +91,8 @@ def main():
                     set_done(print_obj['balloonid'])
                     print_cnt += 1
         logger.info(f"共打印了{print_cnt}个气球单")
-        print(f"共打印了{print_cnt}个气球单")
+        if print_cnt != 0:
+            print(f"共打印了{print_cnt}个气球单")
         time.sleep(5)
 
 

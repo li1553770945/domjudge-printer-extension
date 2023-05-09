@@ -7,11 +7,11 @@ from requests.auth import HTTPBasicAuth
 from log import get_logger
 import shlex
 
-SERVER_ADDR = "http://192.168.1.197:8000/"
+SERVER_ADDR = "http://192.168.11.160:8000/"
 FILE_PATH = "files"
-ROOMS = ["501"]
+ROOMS = ["509"]
 USERNAME = "printuser"
-PASSWORD = "print123456"
+PASSWORD = "printjscpc123"
 
 
 def get_pending_prints():
@@ -45,20 +45,20 @@ def need_print(location):
     return room in ROOMS
 
 
-def send_to_printer(print_id, team_name, file_name, location, language):
+def send_to_printer(print_id, team_name, file_name, location, language,original_name):
     time_now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"{time_now}:正在打印来自:{team_name}的内容，打印id:{print_id}")
     logger.info(f"正在打印来自:{team_name}的内容，打印id:{print_id}")
-    header = f"id:{print_id} name:{team_name} location:{location}"
+    header = f"id:{print_id} name:{team_name} location:{location} file:{original_name}"
     if language in language_id_to_enscript:
-        cmd = ["enscript", f"---highlight={language_id_to_enscript[language]}", "-b", header, "-f", "Courier9", file_name]
+        cmd = ["enscript", f"--highlight={language_id_to_enscript[language]}", "-b", header, "-f", "Courier9", file_name]
     else:
         cmd = ["enscript", "-b", header, "-f", "Courier9", file_name]
     try:
         result = subprocess.run(cmd, cwd=os.getcwd(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout = result.stdout.decode()
         stderr = result.stderr.decode()
-        if result.returncode == 0 and stderr == "":
+        if result.returncode == 0:
             logger.info(f"id:{print_id}打印成功，执行结果：{result.stdout}")
             return True
         else:
@@ -73,13 +73,14 @@ def send_to_printer(print_id, team_name, file_name, location, language):
 
 
 def process(print_obj):
-    url = f"{SERVER_ADDR}{print_obj['file']}"
-    response = requests.get(url)
-    file_path = os.path.join(FILE_PATH, print_obj['original_name'])
+    file_name = os.path.split(print_obj['file'])[-1]
+    url = f"{SERVER_ADDR}files/{file_name}/"
+    response = requests.get(url,auth=HTTPBasicAuth(USERNAME, PASSWORD))
+    file_path = os.path.join(FILE_PATH, file_name)
     with open(file_path, 'wb') as f:
         f.write(response.content)
     return send_to_printer(print_obj['id'], print_obj['team_name'], file_path, print_obj['location'],
-                           print_obj['language'])
+                           print_obj['language'],print_obj['original_name'])
 
 
 def main():
